@@ -1,0 +1,33 @@
+{
+  "name": "vite-plugin-logger",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "./src/index.ts",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./logger": {
+      "types": "./dist/package/logger/index.d.ts",
+      "import": "./dist/package/logger/index.js",
+      "require": "./dist/package/logger/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "update:version": "npm version patch --no-git-tag-version",
+    "publishing": "npm run update:version && npm run build && npm publish"
+  },
+  "devDependencies": {
+    "typescript": "5.4.5",
+    "vite": "6.0.3",
+    "node-fetch": "~3.3.2"
+  },
+  "peerDependencies": {}
+}
