@@ -82,26 +82,7 @@ export default function loggerPlugin(
   }
   return {
     name: 'vite-plugin-logger',
-    enforce: 'post', // Выполняем после других трансформаций
-
-    // Post-process после сборки: проверяем, есть ли импорты logger
-    writeBundle(_, bundle) {
-      // Отладочная логика: проверяем, есть ли импорты logger
-      for (const [ fileName, output ] of Object.entries(bundle)) {
-        if (output && output.type === 'chunk' && typeof output.code === 'string') {
-          // Ищем импорты logger из нового пути
-          const loggerImportRegex = new RegExp(
-            'import\\s+logger\\s+from\\s*["\']@zephyr\\/use-tools\\/logger["\']'
-          )
-          const match = loggerImportRegex.exec(output.code)
-
-          if (match) {
-            // Найден импорт logger из нового пути - это нормально
-            console.log('[vite-plugin-logger] Найден корректный импорт logger в файле:', fileName)
-          }
-        }
-      }
-    },
+    enforce: 'pre',
 
     async transform(code: string, id: string) {
       // Пропускаем node_modules и не-JS/TS файлы
@@ -110,7 +91,8 @@ export default function loggerPlugin(
       }
 
       // Пропускаем сам файл логгера, чтобы избежать рекурсии
-      if (id.includes('logger.ts') || id.includes('vite-plugin-logger')) {
+      const isLoggerFile = id.endsWith('logger.ts') || id.endsWith('vite-plugin-logger')
+      if (isLoggerFile) {
         return null
       }
 
@@ -136,8 +118,7 @@ export default function loggerPlugin(
           // if (!('@zephyr/use-tools' in deps)) {
           //   return null
           // }
-        } catch (error) {
-          console.log('Нет зависимости на логгер - пропускаем файл', { packageName, error })
+        } catch {
           return null
         }
       }
@@ -205,7 +186,7 @@ export default function loggerPlugin(
       // Если были изменения, добавляем импорт logger при необходимости
       if (hasChanges) {
         if (withImport) {
-          const modulePath = local ? '@logger' : '@zephyr/vite-plugin-logger/logger'
+          const modulePath = 'vite-plugin-logger/logger'
           const loggerImport = `import { logger as __$vl$__ } from '${modulePath}';`
 
           // Проверим, что такого импорта еще нет

@@ -1,6 +1,7 @@
 {
   "name": "vite-plugin-logger",
   "version": "0.0.1",
+  "private": true,
   "type": "module",
   "main": "./src/index.ts",
   "module": "./dist/index.js",
@@ -21,6 +22,8 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite build --watch",
+    "dev:example": "pnpm --filter demo-vue dev",
+    "build:example": "pnpm --filter demo-vue build",
     "update:version": "npm version patch --no-git-tag-version",
     "publishing": "npm run update:version && npm run build && npm publish"
   },
