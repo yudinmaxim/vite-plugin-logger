@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "exports": {
     ".": {
@@ -11,9 +11,8 @@
       "require": "./dist/index.cjs"
     },
     "./logger": {
-      "types": "./dist/package/logger/index.d.ts",
-      "import": "./dist/package/logger/index.js",
-      "require": "./dist/package/logger/index.cjs"
+      "import": "./dist/logger/index.js",
+      "require": "./dist/logger/index.cjs"
     }
   },
   "files": [

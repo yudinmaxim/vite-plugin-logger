@@ -1,28 +1,47 @@
 import { defineConfig } from 'vite'
 import path from 'path'
-// import dts from 'vite-plugin-dts' // надо для автотипов
-import packageJson from './package.json'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  resolve: {
-    alias: {
-      '@logger': path.resolve(__dirname, './src/logger.ts')
-    }
-  },
   build: {
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
-      formats: [ 'es', 'cjs' ],
+      formats: ['es', 'cjs'],
       fileName: 'index'
     },
-    target: 'esnext',
-    minify: false,
     rollupOptions: {
+      treeshake: false,
       external: ['node:fs', 'node:path'],
-      output: {
-        minifyInternalExports: false
-      }
-    }
-  }
+
+      input: {
+        main: path.resolve(__dirname, './src/index.ts'),
+        logger: path.resolve(__dirname, './src/logger.ts')
+      },
+      output: [
+        {
+          entryFileNames: (chunkInfo) => {
+            if (chunkInfo.name === 'main') {
+              return 'index.js'
+            }
+            return `${chunkInfo.name}/index.js`
+          },
+          format: 'es',
+        },
+        {
+          entryFileNames: (chunkInfo) => {
+            if (chunkInfo.name === 'main') {
+              return 'index.cjs'
+            }
+            return `${chunkInfo.name}/index.cjs`
+          },
+          format: 'cjs',
+        }
+      ],
+    },
+    minify: false,
+    target: 'esnext',
+    cssCodeSplit: true,
+    sourcemap: true,
+    chunkSizeWarningLimit: 1000
+  },
 })
