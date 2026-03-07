@@ -1,19 +1,42 @@
-import type { Plugin } from 'vite'
+import type { PluginOption } from 'vite'
 import { dirname, join } from 'node:path'
 import { existsSync, readFileSync } from 'node:fs'
 
-interface LoggerPluginOptions {
+/**
+ * Опции плагина логгера для Vite.
+ */
+export interface LoggerPluginOptions {
+  /** Название пакета, которое будет отображаться в логах. */
   packageName: string;
+  /** Цвет фона для логов (например, '#ff0000'). */
   color?: string;
+  /** Паттерны имён файлов, которые следует исключить из обработки. */
   exclude?: string[];
 }
 
-export default function loggerPlugin(packageName: string, backgroundColor?: string): Plugin
-export default function loggerPlugin(options: LoggerPluginOptions): Plugin
+/**
+ * Создаёт плагин Vite для логгирования с указанным именем пакета и цветом фона.
+ * @param packageName - Название пакета, которое будет отображаться в логах.
+ * @param backgroundColor - Цвет фона для логов (например, '#ff0000').
+ * @returns Плагин Vite.
+ */
+export default function loggerPlugin(packageName: string, backgroundColor?: string): PluginOption
+/**
+ * Создаёт плагин Vite для логгирования с использованием объекта опций.
+ * @param options - Опции плагина логгера.
+ * @returns Плагин Vite.
+ */
+export default function loggerPlugin(options: LoggerPluginOptions): PluginOption
+/**
+ * Основная реализация плагина логгера для Vite.
+ * @param packageNameOrOptions - Либо строка с именем пакета, либо объект опций.
+ * @param backgroundColor - Цвет фона для логов (если передан строковый параметр).
+ * @returns Плагин Vite, который трансформирует вызовы console.* для добавления меток.
+ */
 export default function loggerPlugin(
   packageNameOrOptions: string | LoggerPluginOptions,
   backgroundColor?: string
-): Plugin {
+): PluginOption {
   let packageName: string
   let color: string | undefined
   let excludePatterns: string[] | undefined
@@ -30,7 +53,7 @@ export default function loggerPlugin(
 
   return {
     name: 'vite-plugin-logger',
-    enforce: 'post',
+    enforce: 'post' as const,
 
     async transform(code: string, id: string) {
       const fileName = id.split('/').pop() || ''
@@ -125,5 +148,5 @@ export default function loggerPlugin(
         map: null
       }
     }
-  }
+  } satisfies PluginOption
 }

@@ -1,8 +1,22 @@
 import { defineConfig } from 'vite'
-import path from 'path'
+import path, { resolve } from 'path'
+import dts from 'vite-plugin-dts'
+
+const entries = {
+  index: resolve(__dirname, './src/index.ts'),
+  logger: resolve(__dirname, './src/logger.ts')
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  plugins: [
+    dts({
+      outDir: './dist/types',
+      include: [ './src/**/*' ],
+      exclude: [ './src/**/*.stories.ts', './src/**/*.test.ts' ],
+      rollupTypes: true
+    })
+  ],
   build: {
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
@@ -12,11 +26,7 @@ export default defineConfig({
     rollupOptions: {
       treeshake: false,
       external: ['node:fs', 'node:path'],
-
-      input: {
-        main: path.resolve(__dirname, './src/index.ts'),
-        logger: path.resolve(__dirname, './src/logger.ts')
-      },
+      input: entries,
       output: [
         {
           entryFileNames: (chunkInfo) => {

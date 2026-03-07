@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, PluginOption } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import loggerPlugin from 'vite-plugin-logger'
 

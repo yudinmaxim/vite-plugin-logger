@@ -3,14 +3,16 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
+  "main": "./dist/index/index.js",
+  "module": "./dist/index/index.js",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index/index.js",
+      "require": "./dist/index/index.cjs"
     },
     "./logger": {
+      "types": "./dist/types/index.d.ts",
       "import": "./dist/logger/index.js",
       "require": "./dist/logger/index.cjs"
     }
@@ -27,9 +29,10 @@
     "publishing": "npm run update:version && npm run build && npm publish"
   },
   "devDependencies": {
+    "@types/node": "^25.3.5",
+    "node-fetch": "~3.3.2",
     "typescript": "5.4.5",
     "vite": "6.0.3",
-    "node-fetch": "~3.3.2"
-  },
-  "peerDependencies": {}
+    "vite-plugin-dts": "^4.5.4"
+  }
 }
