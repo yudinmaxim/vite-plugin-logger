@@ -15,6 +15,13 @@ export interface LoggerPluginOptions {
 }
 
 /**
+ * Вспомогательная функция для создания плагина с явным типом.
+ */
+function createPlugin(plugin: PluginOption): PluginOption {
+  return plugin
+}
+
+/**
  * Создаёт плагин Vite для логгирования с указанным именем пакета и цветом фона.
  * @param packageName - Название пакета, которое будет отображаться в логах.
  * @param backgroundColor - Цвет фона для логов (например, '#ff0000').
@@ -51,13 +58,13 @@ export default function loggerPlugin(
     excludePatterns = packageNameOrOptions.exclude
   }
 
-  return {
+  return createPlugin({
     name: 'vite-plugin-logger',
     enforce: 'post' as const,
 
     async transform(code: string, id: string) {
       const fileName = id.split('/').pop() || ''
-      
+
       if (id.includes('node_modules') || !/\.(js|ts|jsx|tsx|vue)$/.test(id)) {
         return null
       }
@@ -148,5 +155,5 @@ export default function loggerPlugin(
         map: null
       }
     }
-  } satisfies PluginOption
+  })
 }

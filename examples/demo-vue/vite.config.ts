@@ -1,4 +1,4 @@
-import { defineConfig, PluginOption } from 'vite'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import loggerPlugin from 'vite-plugin-logger'
 
@@ -8,7 +8,6 @@ export default defineConfig({
     port: 5010
   },
   plugins: [
-
     loggerPlugin({
       packageName: 'demo-vue',
       color: '#42b883'
@@ -20,7 +19,6 @@ export default defineConfig({
     target: 'esnext',
     cssCodeSplit: true,
     sourcemap: true,
-    // chunkSizeWarningLimit: 1000,
     assetsInlineLimit: 1,
     modulePreload: {
       polyfill: false
